@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import './SingleBlog.css'
 import Navbar from "../../components/Navbar/Navbar";
 
 
 const SingleBlog = () => {
+  const navigate = useNavigate()
 
   const {id} = useParams();
   const [blog,setBlog]  =  useState();
@@ -16,12 +17,20 @@ const SingleBlog = () => {
   if(response.status == 200){
     setBlog(response.data)
     console.log(blog)
+  }else{
+    alert("Something went wrong")
   }
   }
 
   // delete blog
-  const deleteBlog = ()=>{
-    
+  const deleteBlog = async ()=>{
+    const response = await axios.delete("https://64ee09451f8721827142370c.mockapi.io/blogs/" + id)
+   if(response.status == 200){
+    navigate("/")
+   }else{
+    alert("Something went wrong")
+   }
+
   }
 
   useEffect(()=>{
@@ -39,7 +48,7 @@ const SingleBlog = () => {
     <div className="post-content">
         <h1 className="post-title">{blog?.title}</h1>
         <p className="post-description">{blog?.description}</p>
-    <button onClick={()=>deleteBlog()} >Delete</button>
+    <button onClick={deleteBlog} >Delete</button>
     </div>
 </div>
     </>
